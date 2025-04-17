@@ -1,0 +1,32 @@
+@startuml
+!include <C4/C4>
+!include <C4/C4_Container>
+
+title Диаграмма контейнеров "Передача ставок по депозитам в партнерский кол-центр"
+
+
+actor "Клиент" as cl
+actor "Оператор колл-центра" as op
+actor "Оператор партнерского колл-центра" as ecop
+
+
+rectangle "Колл-центр" {
+  Container(ccs, "CC System")
+  Container(drd, "Deposit Rate Database")
+}
+
+rectangle "Партнерский колл-центр" {
+    Container(ec, "Партнерский колл-центр")
+    Container(sftp, "SFTP обменник")
+}
+
+
+cl -- ccs : "Обращение в колл-центр"
+op -- ccs : "Инициализация выгрузки"
+ccs -- sftp : "Выгрузка ставок по деппозитам"
+sftp -- ec : "Получкение ставок по депозитам"
+ecop -- ec
+drd .. ccs : Обращение к данным
+
+
+@enduml
